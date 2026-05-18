@@ -1,0 +1,136 @@
+<!-- chat-input.html  -->
+<div class="input-area">
+  <!-- Top bar: Examples toggle + Model selector + Export -->
+  <div class="input-topbar">
+    <button
+      class="input-topbar__btn"
+      (click)="examplesOpen = !examplesOpen; modelPickerOpen = false"
+    >
+      ✨ Examples
+      <svg
+        class="input-topbar__chevron"
+        [class.rotated]="examplesOpen"
+        width="10"
+        height="10"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </button>
+
+    <!-- Model selector button -->
+    <div class="model-selector">
+      <button
+        class="model-selector__trigger"
+        [class.model-selector__trigger--open]="modelPickerOpen"
+        [attr.data-tier]="selectedModelTier"
+        (click)="toggleModelPicker()"
+        title="Select AI model"
+      >
+        <span class="model-selector__dot" [attr.data-tier]="selectedModelTier"></span>
+        <span class="model-selector__label">{{ selectedModelLabel }}</span>
+        <svg
+          class="model-selector__chevron"
+          [class.rotated]="modelPickerOpen"
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      <!-- Dropdown panel -->
+      @if (modelPickerOpen && models.length > 0) {
+      <div class="model-picker">
+        <div class="model-picker__header">Select Model</div>
+        @for (model of models; track model.id) {
+        <button
+          class="model-picker__item"
+          [class.model-picker__item--active]="model.id === selectedModelId"
+          [class.model-picker__item--disabled]="!model.available"
+          [disabled]="!model.available"
+          (click)="selectModel(model.id)"
+        >
+          <div class="model-picker__item-left">
+            <span class="model-picker__tier-dot" [attr.data-tier]="model.tier"></span>
+            <div class="model-picker__item-text">
+              <span class="model-picker__item-label">{{ model.label }}</span>
+              <span class="model-picker__item-desc">{{ model.description }}</span>
+            </div>
+          </div>
+          @if (model.id === selectedModelId) {
+          <span class="model-picker__check">✓</span>
+          } @if (!model.available) {
+          <span class="model-picker__na">No key</span>
+          }
+        </button>
+        }
+
+        <!-- Last used indicator -->
+        @if (state.lastModelUsed()) {
+        <div class="model-picker__footer">
+          Last response: <strong>{{ state.lastModelUsed() }}</strong>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <a
+      class="input-topbar__btn input-topbar__btn--export"
+      [href]="exportUrl"
+      target="_blank"
+      title="Export chat as Markdown"
+    >
+      ↓ Export
+    </a>
+  </div>
+
+  <!-- Examples grid -->
+  @if (examplesOpen && examples.length) {
+  <div class="examples-grid">
+    @for (ex of examples; track ex) {
+    <button class="example-chip" (click)="useExample(ex)">{{ ex }}</button>
+    }
+  </div>
+  }
+
+  <!-- Textarea row -->
+  <div class="input-row">
+    <textarea
+      #inputEl
+      class="input-row__textarea"
+      [(ngModel)]="text"
+      [disabled]="disabled"
+      placeholder="Ask anything… (Shift+Enter for new line)"
+      rows="2"
+      (keydown)="onKeydown($event)"
+    ></textarea>
+
+    <button
+      class="input-row__send"
+      [disabled]="disabled || !text.trim()"
+      (click)="send()"
+      title="Send (Enter)"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.3"
+      >
+        <line x1="22" y1="2" x2="11" y2="13" />
+        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+      </svg>
+    </button>
+  </div>
+</div>

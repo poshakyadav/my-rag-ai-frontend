@@ -1,1 +1,104 @@
-/* You can add global styles to this file, and also import other style files */
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+/* ── CSS Variables (dark theme) ──────────────────────────────────────────── */
+:root {
+  --bg: #0d0d0d;
+  --bg-sidebar: #111111;
+  --bg-card: #1a1a1a;
+  --bg-hover: #1e1e1e;
+  --bg-active: #1a2e1a;
+  --border: #252525;
+  --accent: #1d9e75;
+  --accent-dim: #0f6e52;
+  --text: #e2e2e2;
+  --text-muted: #666;
+  --text-dim: #444;
+  --danger: #e05252;
+  --warn: #e09a2e;
+  --success: #2ebc85;
+  --radius: 9px;
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
+
+/* ── Selection ────────────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(29, 158, 117, 0.28);
+  color: var(--text);
+}
+
+/* ── Focus ring ───────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Typography ───────────────────────────────────────────────────────────── */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+code,
+pre {
+  font-family: var(--mono);
+}
+
+/* ── Accessibility ────────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

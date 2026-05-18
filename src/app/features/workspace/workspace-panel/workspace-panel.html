@@ -1,0 +1,161 @@
+<!-- Backdrop -->
+<div class="ws-overlay" (click)="close()">
+  <!-- Modal (stop propagation so clicks inside don't close) -->
+  <div
+    class="ws-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Workspace settings"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="ws-modal__header">
+      <div class="ws-modal__title">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#1D9E75"
+          stroke-width="2"
+        >
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+        </svg>
+        Workspace
+      </div>
+      <button class="ws-modal__close" (click)="close()" title="Close">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div class="ws-modal__body">
+      <!-- Current workspace badge -->
+      <div class="ws-badge">
+        <div class="ws-badge__dot"></div>
+        <span class="ws-badge__text">{{ currentBadge }}</span>
+      </div>
+
+      <!-- Mode selector -->
+      <div class="ws-modes">
+        <button
+          class="ws-mode-btn"
+          [class.ws-mode-btn--active]="selectedMode === 'existing'"
+          (click)="setMode('existing')"
+        >
+          📂 Existing
+        </button>
+        <button
+          class="ws-mode-btn"
+          [class.ws-mode-btn--active]="selectedMode === 'new'"
+          (click)="setMode('new')"
+        >
+          🆕 New
+        </button>
+        <button
+          class="ws-mode-btn"
+          [class.ws-mode-btn--active]="selectedMode === 'none'"
+          (click)="setMode('none')"
+        >
+          💬 None
+        </button>
+      </div>
+
+      <!-- Path input (hidden when mode = none) -->
+      @if (selectedMode !== 'none') {
+      <div class="ws-field">
+        <label class="ws-field__label">Project Path(s)</label>
+        <textarea
+          class="ws-field__textarea"
+          [(ngModel)]="rawPaths"
+          [placeholder]="pathPlaceholder"
+          rows="4"
+          (ngModelChange)="onPathsChange()"
+        ></textarea>
+      </div>
+      }
+
+      <!-- Status / validation strip -->
+      @if (status.type !== 'idle') {
+      <div
+        class="ws-status"
+        [class.ws-status--valid]="status.type === 'valid' || status.type === 'done'"
+        [class.ws-status--invalid]="status.type === 'invalid' || status.type === 'error'"
+        [class.ws-status--indexing]="status.type === 'validating' || status.type === 'indexing'"
+      >
+        {{ status.text }}
+      </div>
+      }
+
+      <!-- Validation detail (errors / warnings) -->
+      @if (validation) { @if (validation.errors.length > 0) {
+      <ul class="ws-error-list">
+        @for (err of validation.errors; track err) {
+        <li>❌ {{ err }}</li>
+        }
+      </ul>
+      } @if (validation.warnings.length > 0) {
+      <ul class="ws-warn-list">
+        @for (w of validation.warnings; track w) {
+        <li>⚠️ {{ w }}</li>
+        }
+      </ul>
+      } }
+
+      <!-- Progress bar (shown during indexing) -->
+      @if (indexing) {
+      <div class="ws-progress">
+        <div class="ws-progress__bar">
+          <div class="ws-progress__fill"></div>
+        </div>
+        <div class="ws-progress__label">{{ progressLabel }}</div>
+      </div>
+      }
+
+      <!-- Valid paths list -->
+      @if (validation?.ok && validation!.valid_paths && !indexing) {
+      <div class="ws-paths-list">
+        @for (entry of pathEntries; track entry.label) {
+        <div class="ws-paths-list__item">
+          <span class="ws-paths-list__label">{{ entry.label }}</span>
+          <span class="ws-paths-list__path">{{ entry.path }}</span>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Actions -->
+      <div class="ws-actions">
+        @if (selectedMode !== 'none') {
+        <button
+          class="ws-btn ws-btn--secondary"
+          [disabled]="indexing || !rawPaths.trim()"
+          (click)="validate()"
+        >
+          @if (status.type === 'validating') {
+          <span class="ws-btn__spinner"></span> Validating… } @else { 🔍 Validate Paths }
+        </button>
+        }
+
+        <button
+          class="ws-btn ws-btn--primary"
+          [disabled]="indexing || (selectedMode !== 'none' && !rawPaths.trim())"
+          (click)="apply()"
+        >
+          @if (indexing) {
+          <span class="ws-btn__spinner"></span> Indexing… } @else { ⚡ Apply &amp; Index }
+        </button>
+
+        <button class="ws-btn ws-btn--danger" [disabled]="indexing" (click)="clear()">
+          🗑️ Clear Workspace
+        </button>
+      </div>
+
+      <!-- Tips footer -->
+      <div class="ws-tips">
+        <strong>Tips:</strong><br />
+        • One path per line, or use <code>label: /path</code> format<br />
+        • Supports Java, TypeScript, Python, React & more<br />
+        • Re-index after changing project files
+      </div>
+    </div>
+  </div>
+</div>

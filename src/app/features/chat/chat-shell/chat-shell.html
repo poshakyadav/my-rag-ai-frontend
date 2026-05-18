@@ -1,0 +1,39 @@
+<div class="shell" [class.sidebar-collapsed]="!state.sidebarOpen()">
+  <!-- Sidebar -->
+  <aside class="shell__sidebar">
+    <app-sidebar />
+  </aside>
+
+  <!-- Main content -->
+  <main class="shell__main">
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="topbar__toggle" (click)="state.toggleSidebar()" title="Toggle sidebar">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      <span class="topbar__title">🧠 Poshak-AI</span>
+      <span class="topbar__badge">{{ state.workspaceBadge() }}</span>
+    </header>
+
+    <!-- Routed chat view -->
+    <div class="shell__content">
+      <router-outlet />
+    </div>
+  </main>
+
+  <!-- Workspace panel modal -->
+  @if (state.workspacePanelOpen()) {
+  <app-workspace-panel />
+  }
+</div>

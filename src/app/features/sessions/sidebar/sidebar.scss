@@ -1,0 +1,328 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+
+  // ── Header ───────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 12px 10px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--accent);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  &__icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    transition: background 0.18s;
+
+    &--new {
+      background: var(--accent);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 300;
+
+      &:hover {
+        background: var(--accent-dim);
+      }
+    }
+
+    &--workspace {
+      background: #1e3a2e;
+      border: 1px solid var(--accent-dim);
+      font-size: 13px;
+
+      &:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+    }
+  }
+
+  // ── Search ────────────────────────────────────────────────────────────────
+  &__search {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+
+    &-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px 10px;
+      color: var(--text);
+      font-size: 12px;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.18s;
+
+      &:focus {
+        border-color: var(--accent);
+      }
+      &::placeholder {
+        color: var(--text-dim);
+      }
+    }
+  }
+
+  // ── List ──────────────────────────────────────────────────────────────────
+  &__list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 0 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+  }
+
+  &__empty {
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+
+  // ── Group ─────────────────────────────────────────────────────────────────
+  &__group {
+    margin-bottom: 4px;
+
+    &-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      padding: 12px 13px 3px;
+      user-select: none;
+    }
+  }
+
+  // ── Session row ───────────────────────────────────────────────────────────
+  &__session-row {
+    display: flex;
+    align-items: center;
+    margin: 1px 5px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.12s;
+
+    &:hover {
+      background: var(--bg-hover);
+
+      .sidebar__dots {
+        opacity: 1;
+      }
+    }
+
+    &--active {
+      background: var(--bg-active) !important;
+      border-left: 2px solid var(--accent);
+
+      .sidebar__session-title {
+        color: var(--accent);
+      }
+    }
+  }
+
+  &__session-main {
+    flex: 1;
+    padding: 8px 5px 8px 9px;
+    min-width: 0;
+    user-select: none;
+  }
+
+  &__session-title {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    max-width: 182px;
+  }
+
+  &__session-meta {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+
+  &__dots {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 4px 7px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.12s, background 0.12s;
+    flex-shrink: 0;
+
+    &:hover {
+      background: var(--bg-card);
+      color: var(--text);
+    }
+  }
+}
+
+// ── Context menu ──────────────────────────────────────────────────────────────
+.ctx-menu {
+  position: fixed;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 9px;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.55);
+  z-index: 99999;
+  min-width: 148px;
+  overflow: hidden;
+  animation: popIn 0.11s ease-out;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 9px 14px;
+    font-size: 12.5px;
+    font-family: var(--font);
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.1s;
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2px 0;
+  }
+
+  &__danger {
+    color: var(--danger) !important;
+    &:hover {
+      background: #221010 !important;
+    }
+  }
+}
+
+// ── Rename popup ──────────────────────────────────────────────────────────────
+.rename-popup {
+  position: fixed;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 10px;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.6);
+  z-index: 99999;
+  padding: 13px;
+  min-width: 230px;
+
+  &__input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: var(--text);
+    font-size: 12.5px;
+    font-family: var(--font);
+    outline: none;
+    margin-bottom: 9px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 6px;
+
+    button {
+      flex: 1;
+      padding: 7px;
+      border-radius: 7px;
+      border: none;
+      font-size: 12px;
+      font-family: var(--font);
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+
+  &__save {
+    background: var(--accent);
+    color: #fff;
+    &:hover {
+      background: var(--accent-dim);
+    }
+  }
+
+  &__cancel {
+    background: var(--bg-hover);
+    color: var(--text);
+    border: 1px solid var(--border) !important;
+    &:hover {
+      border-color: var(--danger) !important;
+      color: var(--danger) !important;
+    }
+  }
+}
+
+// ── Click-outside overlay ─────────────────────────────────────────────────────
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: transparent;
+}
+
+// ── Animations ─────────────────────────────────────────────────────────────────
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.91) translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

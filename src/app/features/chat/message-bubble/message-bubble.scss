@@ -1,0 +1,292 @@
+// message-bubble.scss
+// ─────────────────────
+// IMPORTANT: Because MessageBubbleComponent uses ViewEncapsulation.None,
+// ALL rules in this file become GLOBAL styles.
+// Prefix every rule tightly with .bubble or .code-block-wrapper
+// to avoid accidentally affecting other parts of the app.
+
+// ── Bubble layout ──────────────────────────────────────────────────────────
+
+.bubble {
+    display: flex;
+    gap: 10px;
+    padding: 8px 4px;
+    max-width: 100%;
+  
+    &--user {
+      flex-direction: row-reverse;
+  
+      .bubble__body {
+        background: #172817;
+        border: 1px solid #243824;
+        border-radius: 12px 12px 4px 12px;
+        align-items: flex-end;
+      }
+  
+      .bubble__text {
+        text-align: right;
+      }
+    }
+  
+    &--assistant {
+      .bubble__body {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px 12px 12px 4px;
+      }
+    }
+  
+    &__avatar {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 4px;
+      line-height: 1;
+    }
+  
+    &__body {
+      padding: 12px 16px;
+      max-width: calc(100% - 48px);
+      word-break: break-word;
+    }
+  
+    &__text {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+  
+    &__empty {
+      color: var(--text-dim);
+      font-style: italic;
+      font-size: 13px;
+    }
+  
+    // ── Markdown area ──────────────────────────────────────────────────────────
+    &__markdown {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.7;
+  
+      h1, h2, h3, h4, h5, h6 {
+        color: var(--text);
+        margin: 16px 0 8px;
+        font-weight: 600;
+        &:first-child { margin-top: 0; }
+      }
+      h1 { font-size: 1.25em; }
+      h2 { font-size: 1.12em; }
+      h3 { font-size: 1em; }
+  
+      p {
+        margin: 0 0 10px;
+        &:last-child { margin-bottom: 0; }
+      }
+  
+      a {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+  
+      strong { font-weight: 700; color: var(--text); }
+      em     { font-style: italic; }
+  
+      // Inline code (not inside pre)
+      code {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        background: #111;
+        border: 1px solid #2a2a2a;
+        border-radius: 4px;
+        padding: 2px 6px;
+        color: #98d0b5;
+      }
+  
+      ul, ol {
+        padding-left: 22px;
+        margin: 8px 0;
+        li { margin: 4px 0; }
+      }
+  
+      blockquote {
+        border-left: 3px solid var(--accent);
+        margin: 10px 0;
+        padding: 6px 14px;
+        color: var(--text-muted);
+        background: #0d1a12;
+        border-radius: 0 6px 6px 0;
+      }
+  
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 16px 0;
+      }
+  
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin: 10px 0;
+  
+        th, td {
+          border: 1px solid var(--border);
+          padding: 7px 12px;
+          text-align: left;
+        }
+        th {
+          background: var(--bg-hover);
+          font-weight: 600;
+        }
+        tr:nth-child(even) td {
+          background: #111;
+        }
+      }
+    }
+  }
+  
+  // ── Code block wrapper ─────────────────────────────────────────────────────
+  // Injected dynamically by message-bubble.ts — must be global scope.
+  
+  .code-block-wrapper {
+    position: relative;
+    margin: 12px 0;
+  
+    // Reset inline <code> style inside pre so hljs theme takes over
+    pre code {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      color: inherit !important;
+      font-size: 12.5px !important;
+      line-height: 1.65 !important;
+      border-radius: 0 !important;
+    }
+  
+    pre {
+      background: #0d1117;          // matches github-dark hljs theme background
+      border: 1px solid #30363d;    // github-dark border colour
+      border-radius: 8px;
+      padding: 38px 16px 16px 16px; // top space for badge + copy btn header row
+      overflow-x: auto;
+      margin: 0;
+      position: relative;
+  
+      // Override any hljs theme background on the <pre> itself
+      &.hljs {
+        background: #0d1117 !important;
+      }
+  
+      scrollbar-width: thin;
+      scrollbar-color: #30363d transparent;
+      &::-webkit-scrollbar { height: 4px; }
+      &::-webkit-scrollbar-thumb {
+        background: #30363d;
+        border-radius: 4px;
+      }
+    }
+  }
+  
+  // ── Language badge ────────────────────────────────────────────────────────
+  
+  .code-lang-badge {
+    position: absolute;
+    top: 9px;
+    left: 14px;
+    font-family: var(--mono, monospace);
+    font-size: 10px;
+    font-weight: 500;
+    color: #7ee787;                  // github-dark green
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 2px 8px;
+    text-transform: lowercase;
+    letter-spacing: 0.4px;
+    pointer-events: none;
+    user-select: none;
+    line-height: 1.6;
+    z-index: 1;
+  }
+  
+  // ── Copy button ────────────────────────────────────────────────────────────
+  
+  .code-copy-btn {
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 26px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #8b949e;                  // github-dark muted text
+    opacity: 0;
+    transition: opacity 0.18s ease, background 0.15s ease,
+                border-color 0.15s ease, color 0.15s ease;
+    z-index: 1;
+    padding: 0;
+    line-height: 1;
+  
+    svg {
+      display: block;
+      flex-shrink: 0;
+    }
+  
+    &:hover {
+      background: #1f2d1f;
+      border-color: var(--accent, #1d9e75);
+      color: var(--accent, #1d9e75);
+      opacity: 1 !important;
+    }
+  
+    &--copied {
+      opacity: 1 !important;
+      border-color: #2ebc85 !important;
+      background: #0d1f14 !important;
+      color: #2ebc85 !important;
+    }
+  }
+  
+  // Show copy button when hovering the code block
+  .code-block-wrapper:hover .code-copy-btn {
+    opacity: 1;
+  }
+  
+  // ── Override highlight.js github-dark theme to fix background clashes ──────
+  // The CDN theme sets pre.hljs { background: ... padding: ... } which we need
+  // to neutralise so our wrapper controls layout completely.
+  
+  pre.hljs,
+  .code-block-wrapper pre.hljs {
+    background: #0d1117 !important;
+    padding: 38px 16px 16px 16px !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+  }
+  
+  // hljs token colours — supplement github-dark for better readability
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-built_in    { color: #ff7b72; }   // red — keywords
+  .hljs-string,
+  .hljs-attr        { color: #a5d6ff; }   // blue — strings / attrs
+  .hljs-comment     { color: #8b949e; font-style: italic; }
+  .hljs-number,
+  .hljs-literal     { color: #79c0ff; }   // light blue — numbers
+  .hljs-function,
+  .hljs-title       { color: #d2a8ff; }   // purple — function names
+  .hljs-type,
+  .hljs-class       { color: #ffa657; }   // orange — types/classes
+  .hljs-variable,
+  .hljs-name        { color: #e6edf3; }   // near-white — variables
+  .hljs-operator,
+  .hljs-punctuation { color: #e6edf3; }
+  .hljs-property    { color: #79c0ff; }
+  .hljs-decorator   { color: #d2a8ff; }
+  .hljs-meta        { color: #8b949e; }

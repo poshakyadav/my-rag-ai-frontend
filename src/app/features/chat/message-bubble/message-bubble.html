@@ -1,0 +1,20 @@
+<div class="bubble" [class.bubble--user]="isUser" [class.bubble--assistant]="!isUser">
+    <div class="bubble__avatar">{{ isUser ? '👤' : '🤖' }}</div>
+    <div class="bubble__body">
+      @if (isUser) {
+        <!--
+          FIX: bind to contentAsString instead of message.content directly.
+          message.content can arrive as an array of LangGraph content blocks
+          from old sessions, which would render as "[object Object]".
+          contentAsString always returns a plain string.
+        -->
+        <p class="bubble__text">{{ contentAsString }}</p>
+      } @else {
+        @if (contentAsString) {
+          <div class="bubble__markdown" [innerHTML]="renderedHtml"></div>
+        } @else {
+          <span class="bubble__empty">…</span>
+        }
+      }
+    </div>
+  </div>

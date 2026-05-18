@@ -1,0 +1,374 @@
+// chat-input.scss
+// Added: model selector, unified top bar
+
+// ── Tier colour tokens ────────────────────────────────────────────────────────
+// Used by the dot badge on the selector trigger and in the picker.
+// auto     → accent green (⚡)
+// fast     → success green
+// balanced → amber
+// heavy    → coral / red-ish
+
+.input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+// ── Top bar ───────────────────────────────────────────────────────────────────
+.input-topbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: var(--font);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    &--export {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-dim);
+
+      &:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+    }
+  }
+
+  &__chevron {
+    transition: transform 0.18s;
+    flex-shrink: 0;
+    &.rotated {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// ── Model selector ────────────────────────────────────────────────────────────
+.model-selector {
+  position: relative;
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 4px 10px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: var(--font);
+    font-weight: 500;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    white-space: nowrap;
+
+    &:hover,
+    &--open {
+      border-color: var(--accent);
+      color: var(--text);
+      background: var(--bg-hover);
+    }
+  }
+
+  &__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &[data-tier='auto'] {
+      background: var(--accent);
+      box-shadow: 0 0 5px var(--accent);
+    }
+    &[data-tier='fast'] {
+      background: var(--success);
+    }
+    &[data-tier='balanced'] {
+      background: var(--warn);
+    }
+    &[data-tier='heavy'] {
+      background: #e07070;
+    }
+  }
+
+  &__label {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__chevron {
+    transition: transform 0.18s;
+    flex-shrink: 0;
+    &.rotated {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// ── Model picker dropdown ─────────────────────────────────────────────────────
+.model-picker {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  min-width: 310px;
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  overflow: hidden;
+  animation: pickerSlide 0.16s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+  &__header {
+    padding: 8px 14px 6px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #181818;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-family: var(--font);
+    color: var(--text);
+    transition: background 0.12s;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--bg-hover);
+    }
+
+    &--active {
+      background: #0f1f18 !important;
+    }
+
+    &--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__item-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__tier-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+
+    &[data-tier='auto'] {
+      background: var(--accent);
+      box-shadow: 0 0 5px var(--accent);
+    }
+    &[data-tier='fast'] {
+      background: var(--success);
+    }
+    &[data-tier='balanced'] {
+      background: var(--warn);
+    }
+    &[data-tier='heavy'] {
+      background: #e07070;
+    }
+  }
+
+  &__item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__item-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__item-desc {
+    font-size: 10.5px;
+    color: var(--text-dim);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__check {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  &__na {
+    font-size: 9.5px;
+    color: var(--text-dim);
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    flex-shrink: 0;
+  }
+
+  &__footer {
+    padding: 7px 14px;
+    font-size: 10px;
+    color: var(--text-dim);
+    background: #0d0d0d;
+    border-top: 1px solid #1a1a1a;
+
+    strong {
+      color: var(--text-muted);
+    }
+  }
+}
+
+@keyframes pickerSlide {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// ── Example chips ─────────────────────────────────────────────────────────────
+.examples-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0 2px;
+}
+
+.example-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+  transition: border-color 0.14s, background 0.14s, color 0.14s;
+  line-height: 1.4;
+
+  &:hover {
+    border-color: var(--accent);
+    background: var(--bg-hover);
+    color: var(--text);
+  }
+}
+
+// ── Input row ─────────────────────────────────────────────────────────────────
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+
+  &__textarea {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13.5px;
+    resize: none;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    min-height: 52px;
+    max-height: 180px;
+
+    &:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(29, 158, 117, 0.12);
+    }
+
+    &::placeholder {
+      color: var(--text-dim);
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+
+  &__send {
+    background: var(--accent);
+    border: none;
+    border-radius: 9px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.18s, transform 0.1s;
+
+    &:hover:not(:disabled) {
+      background: var(--accent-dim);
+    }
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}

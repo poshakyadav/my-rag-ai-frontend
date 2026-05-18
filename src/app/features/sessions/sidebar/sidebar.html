@@ -1,0 +1,111 @@
+<div class="sidebar">
+  <!-- Header -->
+  <div class="sidebar__header">
+    <div class="sidebar__logo">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.3"
+      >
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </svg>
+      Poshak-AI
+    </div>
+    <div class="sidebar__actions">
+      <button
+        class="sidebar__icon-btn sidebar__icon-btn--workspace"
+        (click)="openWorkspace()"
+        title="Manage Workspace"
+      >
+        📁
+      </button>
+      <button class="sidebar__icon-btn sidebar__icon-btn--new" (click)="newChat()" title="New Chat">
+        +
+      </button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="sidebar__search">
+    <input
+      class="sidebar__search-input"
+      type="text"
+      placeholder="Search chats…"
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange()"
+    />
+  </div>
+
+  <!-- Session list -->
+  <div class="sidebar__list" *ngIf="!loading; else loadingTpl">
+    @if (filteredGroups.length === 0) {
+    <div class="sidebar__empty">
+      {{ searchQuery ? 'No chats match your search.' : 'No chats yet. Click + to start.' }}
+    </div>
+    } @for (group of filteredGroups; track group.label) {
+    <div class="sidebar__group">
+      <div class="sidebar__group-label">{{ group.label }}</div>
+      @for (session of group.sessions; track session.session_id) {
+      <div
+        class="sidebar__session-row"
+        [class.sidebar__session-row--active]="session.session_id === activeId()"
+        (click)="loadSession(session)"
+      >
+        <div class="sidebar__session-main">
+          <div class="sidebar__session-title">{{ session.title }}</div>
+          <div class="sidebar__session-meta">
+            {{
+              session.message_count > 0
+                ? session.message_count + ' msg' + (session.message_count !== 1 ? 's' : '')
+                : 'New chat'
+            }}
+          </div>
+        </div>
+        <button class="sidebar__dots" (click)="openMenu($event, session)" title="Options">⋮</button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="sidebar__empty">Loading chats…</div>
+  </ng-template>
+
+  <!-- Context menu -->
+  @if (menuSession) {
+  <div class="ctx-menu" [style.top.px]="menuY" [style.left.px]="menuX">
+    <button (click)="startRename(menuSession!)">✏️ Rename</button>
+    <div class="ctx-menu__divider"></div>
+    <button class="ctx-menu__danger" (click)="deleteSession(menuSession!)">🗑️ Delete</button>
+  </div>
+  }
+
+  <!-- Inline rename popup -->
+  @if (renameSession) {
+  <div class="rename-popup" [style.top.px]="menuY" [style.left.px]="menuX">
+    <input
+      class="rename-popup__input"
+      type="text"
+      [(ngModel)]="renameTitle"
+      (keydown)="onRenameKey($event)"
+      autofocus
+      placeholder="New title…"
+      #renameInput
+    />
+    <div class="rename-popup__actions">
+      <button class="rename-popup__save" (click)="commitRename()">Save</button>
+      <button class="rename-popup__cancel" (click)="cancelRename()">Cancel</button>
+    </div>
+  </div>
+  }
+</div>
+
+<!-- Click-outside overlay for menus -->
+@if (menuSession || renameSession) {
+<div class="menu-overlay" (click)="closeMenus()"></div>
+}

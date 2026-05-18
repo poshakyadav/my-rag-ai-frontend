@@ -1,0 +1,17 @@
+<div class="chat-view">
+  <div class="chat-view__messages" #messagesContainer>
+    @if (messages.length === 0) {
+    <app-message-bubble [message]="welcomeMessage" />
+    } @for (msg of messages; track $index) {
+    <app-message-bubble [message]="msg" />
+    } @if (state.isThinking()) {
+    <div class="thinking-indicator">
+      <div class="thinking-indicator__dots"><span></span><span></span><span></span></div>
+      <span class="thinking-indicator__text">{{ thinkingLabel }}</span>
+    </div>
+    }
+  </div>
+  <div class="chat-view__input-bar">
+    <app-chat-input [disabled]="state.isThinking()" (messageSent)="onMessageSent($event)" />
+  </div>
+</div>
